@@ -13,6 +13,7 @@ from .load_model import load_model
 import comfy.model_management as mm
 from comfy.utils import ProgressBar, common_upscale
 import folder_paths
+cache_dir = "/stable-diffusion-cache/models/sam2"
 
 script_directory = os.path.dirname(os.path.abspath(__file__))
 
@@ -59,12 +60,15 @@ class DownloadAndLoadSAM2Model:
         model_path = os.path.join(download_path, model)
         
         if not os.path.exists(model_path):
-            print(f"Downloading SAM2 model to: {model_path}")
-            from huggingface_hub import snapshot_download
-            snapshot_download(repo_id="Kijai/sam2-safetensors",
-                            allow_patterns=[f"*{model}*"],
-                            local_dir=download_path,
-                            local_dir_use_symlinks=False)
+            if os.path.exists(os.path.join(cache_dir, model)):
+                model_path = os.path.join(cache_dir, model)
+            else:
+                print(f"Downloading SAM2 model to: {model_path}")
+                from huggingface_hub import snapshot_download
+                snapshot_download(repo_id="Kijai/sam2-safetensors",
+                                allow_patterns=[f"*{model}*"],
+                                local_dir=download_path,
+                                local_dir_use_symlinks=False)
 
         model_mapping = {
             "base": "sam2_hiera_b+.yaml",
