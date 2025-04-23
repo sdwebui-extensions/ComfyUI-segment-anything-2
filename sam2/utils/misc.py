@@ -19,12 +19,12 @@ def get_sdpa_settings():
         old_gpu = torch.cuda.get_device_properties(0).major < 7
         # only use Flash Attention on Ampere (8.0) or newer GPUs
         use_flash_attn = torch.cuda.get_device_properties(0).major >= 8 and platform.system() == 'Linux'
-        if not use_flash_attn:
-            warnings.warn(
-                "Flash Attention is disabled as it requires a GPU with Ampere (8.0) CUDA capability.",
-                category=UserWarning,
-                stacklevel=2,
-            )
+        # if not use_flash_attn:
+        #     warnings.warn(
+        #         "Flash Attention is disabled as it requires a GPU with Ampere (8.0) CUDA capability.",
+        #         category=UserWarning,
+        #         stacklevel=2,
+        #     )
         # keep math kernel for PyTorch versions before 2.2 (Flash Attention v2 is only
         # available on PyTorch 2.2+, while Flash Attention v1 cannot handle all cases)
         pytorch_version = tuple(int(v) for v in torch.__version__.split(".")[:2])

@@ -132,31 +132,32 @@ class Florence2toCoordinates:
     CATEGORY = "SAM2"
 
     def segment(self, data, index, batch=False):
-        print(data)
         try:
             coordinates = coordinates.replace("'", '"')
             coordinates = json.loads(coordinates)
         except:
             coordinates = data
-        print("Type of data:", type(data))
-        print("Data:", data)
+
         if len(data)==0:
             return (json.dumps([{'x': 0, 'y': 0}]),)
         center_points = []
 
+        def get_bboxes(item):
+            return item["bboxes"] if isinstance(item, dict) else item
+
         if index.strip():  # Check if index is not empty
             indexes = [int(i) for i in index.split(",")]
         else:  # If index is empty, use all indices from data[0]
-            indexes = list(range(len(data[0])))
+            indexes = list(range(len(get_bboxes(data[0]))))
 
         print("Indexes:", indexes)
         bboxes = []
         
         if batch:
             for idx in indexes:
-                if 0 <= idx < len(data[0]):
+                if 0 <= idx < len(get_bboxes(data[0])):
                     for i in range(len(data)):
-                        bbox = data[i][idx]
+                        bbox = get_bboxes(data[i])[idx]
                         min_x, min_y, max_x, max_y = bbox
                         center_x = int((min_x + max_x) / 2)
                         center_y = int((min_y + max_y) / 2)
@@ -164,8 +165,8 @@ class Florence2toCoordinates:
                         bboxes.append(bbox)
         else:
             for idx in indexes:
-                if 0 <= idx < len(data[0]):
-                    bbox = data[0][idx]
+                if 0 <= idx < len(get_bboxes(data[0])):
+                    bbox = get_bboxes(data[0])[idx]
                     min_x, min_y, max_x, max_y = bbox
                     center_x = int((min_x + max_x) / 2)
                     center_y = int((min_y + max_y) / 2)

@@ -10,7 +10,7 @@ from typing import List, Tuple, Union
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from iopath.common.file_io import g_pathmgr
+#from iopath.common.file_io import g_pathmgr
 
 from ....sam2.modeling.backbones.utils import (
     PatchEmbed,
@@ -264,10 +264,10 @@ class Hiera(nn.Module):
             else [self.blocks[-1].dim_out]
         )
 
-        if weights_path is not None:
-            with g_pathmgr.open(weights_path, "rb") as f:
-                chkpt = torch.load(f, map_location="cpu")
-            logging.info("loading Hiera", self.load_state_dict(chkpt, strict=False))
+        # if weights_path is not None:
+        #     with g_pathmgr.open(weights_path, "rb") as f:
+        #         chkpt = torch.load(f, map_location="cpu")
+        #     logging.info("loading Hiera", self.load_state_dict(chkpt, strict=False))
 
     def _get_pos_embed(self, hw: Tuple[int, int]) -> torch.Tensor:
         h, w = hw
