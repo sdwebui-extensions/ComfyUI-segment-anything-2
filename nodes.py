@@ -13,7 +13,8 @@ from .load_model import load_model
 import comfy.model_management as mm
 from comfy.utils import ProgressBar, common_upscale
 import folder_paths
-cache_dir = "/stable-diffusion-cache/models/sam2"
+from comfy.cli_args import args
+cache_dir = os.path.join(args.cache_root, "models/sam2")
 
 script_directory = os.path.dirname(os.path.abspath(__file__))
 
